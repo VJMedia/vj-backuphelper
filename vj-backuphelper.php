@@ -4,6 +4,7 @@ Plugin Name: 輔仁網: Backup Helper (with Dashboard Monitor)
 Description: 
 Version: 1.0
 Author: <a href="http://www.vjmedia.com.hk/">技術組</a>
+GitHub Plugin URI: https://github.com/VJMedia/vj-backuphelper
 */
 
 /* Date File Generator */
