@@ -1,14 +1,15 @@
 <?php
 /*
-Plugin Name: 輔仁網: Backup Helper (with Dashboard Monitor)
-Description: 
+Plugin Name: 輔仁網: Backup Dashboard Monitor
+Description:
 Version: 1.0
 Author: <a href="http://www.vjmedia.com.hk/">技術組</a>
 GitHub Plugin URI: https://github.com/VJMedia/vj-backuphelper
 */
 
 /* Date File Generator */
-register_activation_hook(__FILE__, 'vjbh_activation');
+
+/*register_activation_hook(__FILE__, 'vjbh_activation');
 
 function vjbh_activation() {
 	if (! wp_next_scheduled ( 'vjbh_event' )) {
@@ -23,12 +24,13 @@ function vjbh_do() {
 	$upload_dir=wp_upload_dir()["basedir"];
 	file_put_contents($upload_dir."/vj-backuphelper.dat",current_time("YmdHis"));
 }
+*/
 
 /* Home Dashboard (VirtusJustitia Only) */
 function vjbh_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
 
-	$server=["backup11","backup12"/*,"backup20"*/,"casper"];
+	$server=["backup11","backup12","casper"];
 	$datatype=["web","db","uploads",];
 	foreach($server as $row){
 		$data[$row]=json_decode(file_get_contents("http://".$row,false,$ctx));
@@ -80,5 +82,5 @@ function vjbh_adddashboardwidgets() {
 // Register the new dashboard widget with the 'wp_dashboard_setup' action
 add_action('wp_dashboard_setup', 'vjbh_adddashboardwidgets' );
 
-vjbh_activation();
+/*vjbh_activation();*/
 ?>
