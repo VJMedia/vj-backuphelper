@@ -31,7 +31,7 @@ function vjbh_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
 
 	$server=["backup11","backup12","casper"];
-	$datatype=["web","db","uploads",];
+	$datatype=["web","db","uploads","log",];
 	foreach($server as $row){
 		$data[$row]=json_decode(file_get_contents("http://".$row,false,$ctx));
 	}
