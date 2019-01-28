@@ -7,6 +7,8 @@ Author: <a href="http://www.vjmedia.com.hk/">技術組</a>
 GitHub Plugin URI: https://github.com/VJMedia/vj-backuphelper
 */
 
+defined('WPINC') || (header("location: /") && die());
+
 /* Date File Generator */
 
 /*register_activation_hook(__FILE__, 'vjbh_activation');
