@@ -32,7 +32,7 @@ function vjbh_do() {
 function vjbh_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
 
-	$server=["backup11","backup12","casper"];
+	$server=["backup1","backup2","casper"];
 	$datatype=["web","db","uploads","log",];
 	foreach($server as $row){
 		$data[$row]=json_decode(file_get_contents("http://".$row,false,$ctx));
@@ -76,10 +76,39 @@ function vjbh_dashboardwidget( $post, $callback_args ) {
 	echo "<div>數字最後同步時間分鐘差，綠色代表正常，紅色請通知羊羊</div>";
 }
 
+
+function vjbh_dashboardwidget2( $post, $callback_args ) {
+	if($diffpath=esc_attr(get_option('vjmedia_uploaddiffpath'))){
+		echo "<table style=\"width: 100%;\">";
+		echo "<tr><td><b>Diff</b></td><td>Filesize</td></tr>";
+		$d = dir($diffpath);
+		while (($file = $d->read()) !== false){
+			if(! in_array($file,[".",".."])){
+				echo "<tr><td>".$file."</td><td>";
+				$filesize=filesize($diffpath.$file);
+				$color=$filesize > 0 ? "red" : "green";
+				echo "<div style=\"width: 100%; background-color: {$color}; color: white;\">{$filesize}</div>";
+				echo "</td></tr>";
+			}
+		}
+		$d->close();
+		echo "</table>";
+	}
+}
+
+
+
+
 // Function used in the action hook
 function vjbh_adddashboardwidgets() {
 	wp_add_dashboard_widget('vjbh_dashboardwidget', 'VJMedia Backup Status', 'vjbh_dashboardwidget');
+	wp_add_dashboard_widget('vjbh_dashboardwidget2', 'VJMedia Diff Status', 'vjbh_dashboardwidget2');
 }
+
+
+
+
+
 
 // Register the new dashboard widget with the 'wp_dashboard_setup' action
 add_action('wp_dashboard_setup', 'vjbh_adddashboardwidgets' );
