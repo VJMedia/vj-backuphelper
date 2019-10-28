@@ -86,4 +86,66 @@ function vjbh_adddashboardwidgets() {
 } add_action('wp_dashboard_setup', 'vjbh_adddashboardwidgets' );
 
 /*vjbh_activation();*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function vjdf_dashboardwidget( $post, $callback_args ) {
+	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
+
+	$server=["backup1","backup2","casper"];
+	foreach($server as $row){
+		$data[$row]=json_decode(file_get_contents("http://".$row."/df.php",false,$ctx));
+	}
+	
+	foreach($data as $key => $df){
+		echo "<table style=\"width: 100%;\">";
+			
+
+		echo "<tr><td style=\"width:64px;\">";
+		echo $key;
+		echo "</td><td>";
+		foreach($df as $path=>$precent){
+			echo "<table><tr><td style=\"width: 64px;\">{$path}</td><td style=\"width: 32px;\">{$precent}%</td><td style=\"width:192px;\"><div style=\"width: {$precent}%; background-color: ".($precent >=95 ? "red" : "green").";\">&nbsp;</div></td></tr></table>";
+		}
+		echo "</tr>";
+		
+		echo "</table>";
+		echo "<hr />";
+	}
+	
+}
+
+
+
+
+
+
+function vjdf_adddashboardwidgets() {
+	wp_add_dashboard_widget('vjdf_dashboardwidget', 'VJMedia DF Status', 'vjdf_dashboardwidget');
+} add_action('wp_dashboard_setup', 'vjdf_adddashboardwidgets' );
 ?>
