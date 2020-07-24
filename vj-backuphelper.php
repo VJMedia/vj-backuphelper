@@ -32,7 +32,8 @@ function vjbh_do() {
 function vjbh_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
 
-	$server=["backup1","backup2","casper"];
+	//$server=["backup1","backup2","casper"];
+	$server=["backup1","casper"];
 	$datatype=["web","db","uploads","log",];
 	foreach($server as $row){
 		$data[$row]=json_decode(file_get_contents("http://".$row,false,$ctx));
@@ -117,7 +118,7 @@ function vjbh_adddashboardwidgets() {
 function vjdf_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
 
-	$server=["backup1","backup2","casper"];
+	$server=["backup1",/*"backup2",*/"casper"];
 	foreach($server as $row){
 		$data[$row]=json_decode(file_get_contents("http://".$row."/df.php",false,$ctx));
 	}
