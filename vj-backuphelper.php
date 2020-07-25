@@ -149,4 +149,48 @@ function vjdf_dashboardwidget( $post, $callback_args ) {
 function vjdf_adddashboardwidgets() {
 	wp_add_dashboard_widget('vjdf_dashboardwidget', 'VJMedia DF Status', 'vjdf_dashboardwidget');
 } add_action('wp_dashboard_setup', 'vjdf_adddashboardwidgets' );
+
+
+function vjgd_dashboardwidget( $post, $callback_args ) {
+	$result=shell_exec("/home/vjmedia/gopath/bin/gdrive-sora list -q 'parents in \"1xBIrrXaBocIiy1Pwt1LPZa5F236fXFI6\"'");
+	
+	if(! preg_match("/^Id\s+Name\s+Type\s+Size\s+Created$/",explode("\n",$result)[0])){
+		echo "<span style='color: red'>輸出不符合預期，請聯絡羊</span>";
+	}else{
+		$result=explode("\n",$result);
+		array_shift($result);
+		
+		echo "<table style=\"width: 100%;\">";
+		echo "<tr><td><b>web</b></td><td><b>size</b></td><td><b>timestamp</b></td></tr>";
+		foreach($result as $line){
+			
+			if(preg_match("/^(.*?)\s+(.*?)\s+dir\s+\d\d\d\d-\d\d-\d\d\s+\d\d:\d\d:\d\d$/",$line,$parsed_line)){
+				
+				$site_id=$parsed_line[1];
+				$site_name=$parsed_line[2];
+				echo "<tr><td>{$site_name}</td>";
+				
+				$result2=explode("\t",shell_exec("/home/vjmedia/gopath/bin/gdrive-sora list -q 'parents in \"{$site_id}\"'  --order \"name desc\"  | sed -n 2p | awk '{ print \$4,\"\\011\",\$6,\"\\040\",$7; }'"));
+				echo "<td>";
+				echo $result2[0]."MB";
+				
+				$offset=current_time("timestamp")-strtotime($result2[1]);
+				$color=$offset > 86400*2 ? "red" : "green";
+				
+				echo "</td><td style=\"background-color: {$color}; color: white;\">";
+				echo $result2[1];
+				echo "</td></tr>";
+			}
+		}
+		echo "</table>";
+	}
+}
+
+function vjgd_adddashboardwidgets() {
+	wp_add_dashboard_widget('vjgd_dashboardwidget', '羊學生無限Google Drive','vjgd_dashboardwidget');
+} add_action('wp_dashboard_setup', 'vjgd_adddashboardwidgets' );
+
+
+
+
 ?>
