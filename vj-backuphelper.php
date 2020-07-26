@@ -184,6 +184,30 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 		}
 		echo "</table>";
 	}
+	
+	echo "<hr />";
+	$result=shell_exec("/home/vjmedia/gopath/bin/gdrive-sora list -q \"'11mIZeWcvd_AnKq5l_j8Lh_v_bpvMyQvU' in parents\" | tail -n +2 |  awk '{ print \$1,\$2; }'");
+	
+	//echo $result;
+	$result=explode("\n",$result);
+	foreach($result as $line){
+		if(strlen($line)){
+			//echo $line."\n";
+			if(preg_match("/^(.*?) (.*?)$/",$line,$parsed_line)){
+				$query[]="'{$parsed_line[1]}' in parents";
+			}else{
+				echo "<span style='color: red'>輸出不符合預期，請聯絡羊</span>";
+				break;
+			}
+		}
+	}
+	//echo implode(" or ", $query);
+	
+	
+	//gopath/bin/gdrive-sora list -q \"{$query}\" --order \"modifiedTime desc\" -m 8
+
+	
+	
 }
 
 function vjgd_adddashboardwidgets() {
