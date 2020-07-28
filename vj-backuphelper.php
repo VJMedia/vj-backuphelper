@@ -190,6 +190,7 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 	
 	//echo $result;
 	$result=explode("\n",$result);
+	$query=[];
 	foreach($result as $line){
 		if(strlen($line)){
 			//echo $line."\n";
@@ -201,10 +202,22 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 			}
 		}
 	}
-	//echo implode(" or ", $query);
 	
+	$query=implode(" or ", $query);
+	$result=shell_exec($q="/home/vjmedia/gopath/bin/gdrive-sora list -q \"{$query}\" --order \"modifiedTime desc\" -m 8 | tail -n +2 | awk '{ print \$2,\$4,\$5,\$6,\$7; }'");
+	//echo $q;
 	
-	//gopath/bin/gdrive-sora list -q \"{$query}\" --order \"modifiedTime desc\" -m 8
+	$result=explode("\n",$result);
+	array_pop($result);
+	foreach($result as $line){
+		$line=explode(" ",$line);
+		//var_dump($line);
+		preg_match("/^(.*?)\-(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)\.sql\.gz$/",$line[0],$parsed_line[0]);
+		echo $parsed_line[0][1];
+		echo $parsed_line[0][2]."-".$parsed_line[0][3]."-".$parsed_line[0][4]." ".$parsed_line[0][5].":".$parsed_line[0][6].":".$parsed_line[0][7];
+		
+		echo $line[1].$line[2];
+	}
 
 	
 	
