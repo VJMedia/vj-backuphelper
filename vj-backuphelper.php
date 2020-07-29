@@ -209,16 +209,26 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 	
 	$result=explode("\n",$result);
 	array_pop($result);
+	echo "<table style=\"width: 100%;\">";
+	echo "<tr><td><b>db</b></td><td><b>size</b></td><td><b>timestamp</b></td></tr>";
+		
 	foreach($result as $line){
 		$line=explode(" ",$line);
 		//var_dump($line);
 		preg_match("/^(.*?)\-(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)\.sql\.gz$/",$line[0],$parsed_line[0]);
-		echo $parsed_line[0][1];
-		echo $parsed_line[0][2]."-".$parsed_line[0][3]."-".$parsed_line[0][4]." ".$parsed_line[0][5].":".$parsed_line[0][6].":".$parsed_line[0][7];
+		$offset=current_time("timestamp")-strtotime($parsed_line[0][2]."-".$parsed_line[0][3]."-".$parsed_line[0][4]." ".$parsed_line[0][5].":".$parsed_line[0][6].":".$parsed_line[0][7]);
+		$color=$offset > 86400*2 ? "red" : "green";
 		
+		
+		echo "<tr><td>";
+		echo $parsed_line[0][1];
+		echo "</td><td>";
 		echo $line[1].$line[2];
+		echo "</td><td style=\"background-color: {$color}; color: white;\">";
+		echo $parsed_line[0][2]."-".$parsed_line[0][3]."-".$parsed_line[0][4]." ".$parsed_line[0][5].":".$parsed_line[0][6].":".$parsed_line[0][7];
+		echo "</td></tr>";
 	}
-
+	echo "</table>";
 	
 	
 }
