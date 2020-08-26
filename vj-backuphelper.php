@@ -118,7 +118,7 @@ function vjbh_adddashboardwidgets() {
 function vjdf_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
 
-	$server=["backup1",/*"backup2",*/"casper"];
+	$server=["backup1",/*"backup2",*/"casper","db"];
 	foreach($server as $row){
 		$data[$row]=json_decode(file_get_contents("http://".$row."/df.php",false,$ctx));
 	}
