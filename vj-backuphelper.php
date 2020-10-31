@@ -77,43 +77,11 @@ function vjbh_dashboardwidget( $post, $callback_args ) {
 	echo "<div>數字最後同步時間分鐘差，綠色代表正常，紅色請通知羊羊</div>";
 }
 
-
-
-
-
-
 function vjbh_adddashboardwidgets() {
 	wp_add_dashboard_widget('vjbh_dashboardwidget', 'VJMedia Backup Status', 'vjbh_dashboardwidget');
 } add_action('wp_dashboard_setup', 'vjbh_adddashboardwidgets' );
 
 /*vjbh_activation();*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function vjdf_dashboardwidget( $post, $callback_args ) {
 	$ctx = stream_context_create(array('http'=> array( 'timeout' => 3, ) ));
@@ -140,11 +108,6 @@ function vjdf_dashboardwidget( $post, $callback_args ) {
 	}
 	
 }
-
-
-
-
-
 
 function vjdf_adddashboardwidgets() {
 	wp_add_dashboard_widget('vjdf_dashboardwidget', 'VJMedia DF Status', 'vjdf_dashboardwidget');
@@ -186,8 +149,11 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 	}
 	
 	echo "<hr />";
-	$result=shell_exec("/home/vjmedia/gopath/bin/gdrive-sora list -q \"'11mIZeWcvd_AnKq5l_j8Lh_v_bpvMyQvU' in parents\" | tail -n +2 |  awk '{ print \$1,\$2; }'");
 	
+	$gdrive=get_option('vjmedia_gdrivebinarypath');
+	$gdriveid_db=get_option('vjmedia_gdriveid_db');
+	$result=shell_exec($q="{$gdrive} list -q \"'{$gdriveid_db}' in parents\" | tail -n +2 |  awk '{ print \$1,\$2; }'");
+	//echo $q;	
 	//echo $result;
 	$result=explode("\n",$result);
 	$query=[];
@@ -204,15 +170,16 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 	}
 	
 	$query=implode(" or ", $query);
-	$result=shell_exec($q="/home/vjmedia/gopath/bin/gdrive-sora list -q \"{$query}\" --order \"modifiedTime desc\" -m 8 | tail -n +2 | awk '{ print \$2,\$4,\$5,\$6,\$7; }'");
+	$result=shell_exec($q="{$gdrive} list -q \"{$query}\" --order \"modifiedTime desc\" -m 8 | tail -n +2 | awk '{ print \$2,\$4,\$5,\$6,\$7; }'");
 	//echo $q;
-	
+	//var_dump($result);
 	$result=explode("\n",$result);
 	array_pop($result);
 	echo "<table style=\"width: 100%;\">";
 	echo "<tr><td><b>db</b></td><td><b>size</b></td><td><b>timestamp</b></td></tr>";
 		
 	foreach($result as $line){
+		
 		$line=explode(" ",$line);
 		//var_dump($line);
 		preg_match("/^(.*?)\-(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)\.sql\.gz$/",$line[0],$parsed_line[0]);
@@ -236,8 +203,5 @@ function vjgd_dashboardwidget( $post, $callback_args ) {
 function vjgd_adddashboardwidgets() {
 	wp_add_dashboard_widget('vjgd_dashboardwidget', '羊學生無限Google Drive','vjgd_dashboardwidget');
 } add_action('wp_dashboard_setup', 'vjgd_adddashboardwidgets' );
-
-
-
 
 ?>
